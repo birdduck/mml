@@ -1,4 +1,4 @@
-(defproject com.birdduck/mml "0.1.1"
+(defproject com.birdduck/mml "0.2.0"
   :description "A Music Macro Language (MML) DSL for ClojureScript."
   :url "https://github.com/birdduck/mml"
   :license {:name "MIT"

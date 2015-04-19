@@ -6,7 +6,7 @@
 (enable-console-print!)
 
 (defn mml? [f & args]
-  (satisfies? core/IMml (apply f args)))
+  (core/mml? (apply f args)))
 
 (deftest tempo-test
   (testing "satisfies IMml protocol"
@@ -25,6 +25,18 @@
     (is (mml? core/octave 7)))
   (testing "serializes to mml with numeric input"
     (is (= (core/->mml (core/octave 7)) "o7"))))
+
+(deftest length-test
+  (testing "satisfies IMml protocol"
+    (is (mml? core/length 4)))
+  (testing "serializes to mml with numeric input"
+    (is (= (core/->mml (core/length 4)) "l4"))))
+
+(deftest quantize-test
+  (testing "satisfies IMml protocol"
+    (is (mml? core/quantize 6)))
+  (testing "serializes to mml with numeric input"
+    (is (= (core/->mml (core/quantize 6)) "q6"))))
 
 (deftest rest-test
   (testing "satisfies IMml protocol"
@@ -61,6 +73,52 @@
     (is (= (core/->mml (core/flat :f)) "f-")))
   (testing "serializes to MML with note"
     (is (= (core/->mml (core/flat (core/note "d"))) "d-"))))
+
+(deftest asc-test
+  (testing "satisfies IMml protocol"
+    (is (mml? core/asc "a")))
+  (testing "serializes to MML with note as string"
+    (is (= (core/->mml (core/asc "c")) "<c")))
+  (testing "serializes to MML with note as keyword"
+    (is (= (core/->mml (core/asc :f)) "<f")))
+  (testing "serializes to MML with note"
+    (is (= (core/->mml (core/asc (core/note "d"))) "<d"))))
+
+(deftest desc-test
+  (testing "satisfies IMml protocol"
+    (is (mml? core/desc "a")))
+  (testing "serializes to MML with note as string"
+    (is (= (core/->mml (core/desc "c")) ">c")))
+  (testing "serializes to MML with note as keyword"
+    (is (= (core/->mml (core/desc :f)) ">f")))
+  (testing "serializes to MML with note"
+    (is (= (core/->mml (core/desc (core/note "d"))) ">d"))))
+
+(deftest dot-test
+  (testing "satisfies IMml protocol"
+    (is (mml? core/dot "a")))
+  (testing "serializes to MML with note as string"
+    (is (= (core/->mml (core/dot "c")) "c.")))
+  (testing "serializes to MML with note as keyword"
+    (is (= (core/->mml (core/dot :f)) "f.")))
+  (testing "serializes to MML with note"
+    (is (= (core/->mml (core/dot (core/note "d"))) "d.")))
+  (testing "serializes to MML with appropriate duration"
+    (is (= (core/->mml (core/dot 2 (core/half :a))) "a2.."))))
+
+(deftest sixty-fourth-test
+  (testing "satisfies IMml protocol"
+    (is (mml? core/sixty-fourth "a")))
+  (testing "serializes to MML with note as string"
+    (is (= (core/->mml (core/sixty-fourth "c")) "c64")))
+  (testing "serializes to MML with note as keyword"
+    (is (= (core/->mml (core/sixty-fourth :f)) "f64")))
+  (testing "serializes to MML with note"
+    (is (= (core/->mml (core/sixty-fourth (core/note "d"))) "d64")))
+  (testing "serializes to MML with notes"
+    (is (= (core/->mml (core/sixty-fourth :a "b" (core/note "c"))) "a64b64c64")))
+  (testing "serializes to MML with notes and symbols"
+    (is (= (core/->mml (core/sixty-fourth (core/flat "a") "b" (core/rest))) "a-64b64r64"))))
 
 (deftest thirty-second-test
   (testing "satisfies IMml protocol"
@@ -159,6 +217,21 @@
     (is (= (core/->mml (core/measure :a "b" (core/note "c"))) "a b c")))
   (testing "serializes to MML with notes and symbols"
     (is (= (core/->mml (core/measure (core/flat "a") "b" (core/rest))) "a- b r"))))
+
+
+(deftest repeat-test
+  (testing "satisfies IMml protocol"
+    (is (mml? core/repeat "a")))
+  (testing "serializes to MML with note as string"
+    (is (= (core/->mml (core/repeat 1 "c")) "[c]")))
+  (testing "serializes to MML with note as keyword"
+    (is (= (core/->mml (core/repeat 2 :f)) "[f]2")))
+  (testing "serializes to MML with note"
+    (is (= (core/->mml (core/repeat 4 (core/note "d"))) "[d]4")))
+  (testing "serializes to MML with notes"
+    (is (= (core/->mml (core/repeat 2 :a "b" (core/note "c"))) "[a b c]2")))
+  (testing "serializes to MML with notes and symbols"
+    (is (= (core/->mml (core/repeat 8 (core/flat "a") "b" (core/rest))) "[a- b r]8"))))
 
 (deftest mml-test
   (testing "serializes parameters into MML"
