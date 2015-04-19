@@ -1,5 +1,5 @@
 (ns test-runner
-  (:require [birdduck.mml.core-test]
+  (:require [mml.core-test]
             [cljs.test :as test :refer-macros [run-tests] :refer [report]]))
 
 (enable-console-print!)
@@ -14,4 +14,4 @@
   "This will run all tests in the provided name spaces."
   (test/run-tests
    (test/empty-env ::test/default)
-   'birdduck.mml.core-test))
+   'mml.core-test))

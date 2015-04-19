@@ -1,4 +1,4 @@
-(ns birdduck.mml.core
+(ns mml.core
   (:refer-clojure :exclude [rest]))
 
 (defprotocol IMml

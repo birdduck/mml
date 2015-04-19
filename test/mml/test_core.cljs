@@ -1,6 +1,6 @@
-(ns birdduck.mml.core-test
+(ns mml.core-test
   (:require [cljs.test]
-            [birdduck.mml.core :as core])
+            [mml.core :as core])
   (:require-macros [cljs.test :refer [is deftest testing]]))
 
 (enable-console-print!)
